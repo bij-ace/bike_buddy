@@ -173,7 +173,6 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<NetworksResponse> call, Throwable t) {
-
                 }
             });
         }

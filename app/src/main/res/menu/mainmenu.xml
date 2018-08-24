@@ -8,11 +8,4 @@
         android:title="Refresh"
         app:showAsAction="always" />
 
-    <item
-        android:id="@+id/action_map"
-        android:orderInCategory="100"
-        android:visible="false"
-        android:icon="@drawable/icons_map"
-        android:title="Refresh"
-        app:showAsAction="always" />
 </menu>

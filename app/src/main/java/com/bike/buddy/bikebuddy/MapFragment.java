@@ -1,21 +1,22 @@
 package com.bike.buddy.bikebuddy;
 
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.bike.buddy.bikebuddy.retrofit.api.BikeBuddyApi;
 import com.bike.buddy.bikebuddy.retrofit.model.Network;
+import com.bike.buddy.bikebuddy.retrofit.model.Station;
+import com.bike.buddy.bikebuddy.retrofit.model.StationNetworkResponse;
+import com.bike.buddy.bikebuddy.retrofit.service.BikeBuddyService;
+import com.bike.buddy.bikebuddy.util.NetworkUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,17 +24,18 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -67,6 +69,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private OnFragmentInteractionListener mListener;
     private List<Network> bikeplaces;
 
+    private List<Station> stat;
+
+
     private BuddyPrefs prefs;
 
     public MapFragment() {
@@ -95,6 +100,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         Bundle b = this.getArguments();
         bikeplaces = (List<Network>) b.getSerializable(ARG_PARAM1);
+        //stationsList();
         //networks.forEach(n->Log.e("name", n.getName()));
     }
 
@@ -177,12 +183,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
 
+        stationsList();
         setUpMarkersOnMap();
     }
 
     private void setUpMarkersOnMap() {
-        for(int i =0; i< bikeplaces.size(); i++)
-        {
+        for (int i = 0; i < bikeplaces.size(); i++) {
             LatLng place = new LatLng(bikeplaces.get(i).getLocation().getLatitude(), bikeplaces.get(i).getLocation().getLongitude());
             mMap.addMarker(new MarkerOptions().position(place).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).title(bikeplaces.get(i).getName()));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(place));
@@ -205,6 +211,46 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage());
+        }
+    }
+
+    private void stationsList() {
+        if (NetworkUtils.isNetworkAvailable(getActivity().getApplicationContext())) {
+            Call call;
+            BikeBuddyApi api = BikeBuddyService.createService(AppConstants.APPLICATION_BASE_URL);
+            call = api.getStations("denver");
+            call.enqueue(new Callback<StationNetworkResponse>() {
+                @Override
+                public void onResponse(Call<StationNetworkResponse> call, Response<StationNetworkResponse> response) {
+                    if (response.isSuccessful()) {
+                        Log.e("TESTING", String.valueOf(response.body().getNetwork().getNetwork().size()));
+                        stat = response.body().getNetwork().getNetwork();
+                        for(int i =0; i< stat.size(); i++)
+                        {
+                            LatLng place = new LatLng(stat.get(i).getLatitude(), stat.get(i).getLongitude());
+
+                            mMap.addMarker(new MarkerOptions().position(place).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).title(stat.get(i).getName()));
+
+                            int finalI = i;
+                            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                                @Override
+                                public boolean onMarkerClick(Marker marker) {
+                                    String toast = "Free bikes : " + stat.get(finalI).getFree_bikes() + "\n" + "Empty Slots : " + stat.get(finalI).getEmpty_slots();
+                                    Toast.makeText(getContext(), toast, Toast.LENGTH_LONG ).show();
+                                    return false;
+                                }
+                            });
+                        }
+                        Log.e("STAT", String.valueOf(stat.get(0).getFree_bikes()));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<StationNetworkResponse> call, Throwable t) {
+
+                    Log.e("FAILEd", t.getMessage());
+                }
+            });
         }
     }
 

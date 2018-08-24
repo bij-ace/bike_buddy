@@ -51,7 +51,7 @@ public class NetworkCustomAdapter extends RecyclerView.Adapter<NetworkCustomAdap
         holder.location.setText(network.getLocation().getAddress());
         holder.cv.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-//                List<Network> filteredNetworks = allNetworks.getNetworks()
+
             }
         });
     }

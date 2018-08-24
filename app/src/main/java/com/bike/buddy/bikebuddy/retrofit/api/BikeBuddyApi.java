@@ -2,6 +2,7 @@ package com.bike.buddy.bikebuddy.retrofit.api;
 
 import com.bike.buddy.bikebuddy.retrofit.model.IncidentsResponse;
 import com.bike.buddy.bikebuddy.retrofit.model.NetworksResponse;
+import com.bike.buddy.bikebuddy.retrofit.model.StationNetworkResponse;
 import com.bike.buddy.bikebuddy.retrofit.model.StationResponse;
 
 import retrofit2.Call;
@@ -15,9 +16,10 @@ public interface BikeBuddyApi {
     Call<NetworksResponse> getNetworks();
 
     @GET("v2/networks/{id}")
-    Call<StationResponse> getStations(@Path("id") String id);
+    Call<StationNetworkResponse> getStations(@Path("id") String id);
 
     @GET("incidents")
     Call<IncidentsResponse> getIncidents(@Query("incident_type") String incidentType,
                                          @Query("query") String query);
+
 }
