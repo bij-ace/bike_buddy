@@ -7,33 +7,35 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bike.buddy.bikebuddy.adapters.HazardsCustomAdapter;
+import com.bike.buddy.bikebuddy.adapters.StationsCustomAdapter;
 import com.bike.buddy.bikebuddy.retrofit.model.Station;
 
 import java.util.List;
 
-public class HazardsScreenActivity extends AppCompatActivity {
-    RecyclerView hazardsRecyclerView;
+public class StationResultScreenActivity extends AppCompatActivity {
+    RecyclerView stationRecyclerView;
     List<Station> stationsList = null;
     TextView emptyView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_result_screen);
         setupViews();
         LinearLayoutManager llm = new LinearLayoutManager(getApplication());
-        hazardsRecyclerView.setLayoutManager(llm);
+        stationRecyclerView.setLayoutManager(llm);
         if (stationsList != null) {
-            HazardsCustomAdapter adapter = new HazardsCustomAdapter(stationsList);
-            hazardsRecyclerView.setAdapter(adapter);
+            StationsCustomAdapter adapter = new StationsCustomAdapter(stationsList);
+            stationRecyclerView.setAdapter(adapter);
         } else {
             emptyView.setVisibility(View.VISIBLE);
         }
     }
 
     private void setupViews() {
-        hazardsRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_list);
+        stationRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_list);
         emptyView = (TextView) findViewById(R.id.emty_view);
     }
+
+
 }
