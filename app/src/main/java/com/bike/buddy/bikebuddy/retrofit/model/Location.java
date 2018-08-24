@@ -1,5 +1,7 @@
 package com.bike.buddy.bikebuddy.retrofit.model;
 
+import com.bike.buddy.bikebuddy.util.ConvertLatLngToAddress;
+
 import java.io.Serializable;
 
 public class Location implements Serializable{
@@ -41,4 +43,9 @@ public class Location implements Serializable{
         this.longitude = longitude;
     }
 
+    public String getAddress(){
+        ConvertLatLngToAddress convertLatLngToAddress = new ConvertLatLngToAddress();
+        String address = convertLatLngToAddress.getCompleteAddressString(getLatitude(),getLongitude());
+        return address;
+    }
 }

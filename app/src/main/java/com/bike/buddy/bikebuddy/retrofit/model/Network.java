@@ -60,4 +60,12 @@ public class Network implements Serializable{
         this.gbfsHref = gbfsHref;
     }
 
+    public String getCompanyName() {
+        String address = "";
+        for (int i = 0; i < company.size(); i++) {
+            address+=company.get(i);
+        }
+        return address;
+    }
+
 }
