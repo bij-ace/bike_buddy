@@ -27,6 +27,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,11 +58,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private static final int DEFAULT_ZOOM = 15;
     private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
-
-    private String mParam1;
-    private String mParam2;
-
     private OnFragmentInteractionListener mListener;
+    //private
+
+    private BuddyPrefs prefs;
 
     public MapFragment() {
         // Required empty public constructor
@@ -87,10 +88,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -103,6 +100,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }
 
+        prefs = new BuddyPrefs(getContext());
         // Construct a FusedLocationProviderClient.
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
 
@@ -153,24 +151,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-
     @Override
     public void onDetach() {
         super.onDetach();
@@ -182,20 +162,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mMap = googleMap;
         // Prompt the user for permission.
         locationUpdate();
-        if (mLastKnownLocation != null) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+        if (prefs != null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(prefs.getLat_val(), prefs.getLong_val()), DEFAULT_ZOOM));
         } else {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
+
+        //setUpMarkersOnMap();
     }
+
+//    private void setUpMarkersOnMap() {
+//        for(int i =0; i<)
+//    }
 
     private void locationUpdate() {
         if (mMap == null) {
             return;
         }
         try {
-            if (mLastKnownLocation != null) {
+            if (prefs != null) {
                 mMap.setMyLocationEnabled(true);
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
             } else {
@@ -207,7 +193,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Log.e("Exception: %s", e.getMessage());
         }
     }
-
 
     /**
      * This interface must be implemented by activities that contain this
