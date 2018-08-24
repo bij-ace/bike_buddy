@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bike.buddy.bikebuddy.retrofit.model.Network;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,11 +24,15 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -59,7 +65,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private static final int DEFAULT_ZOOM = 15;
     private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
     private OnFragmentInteractionListener mListener;
-    //private
+    private List<Network> bikeplaces;
 
     private BuddyPrefs prefs;
 
@@ -72,15 +78,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment MapFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MapFragment newInstance(String param1, String param2) {
+    public static MapFragment newInstance(List<Network> param1) {
         MapFragment fragment = new MapFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(ARG_PARAM1, (Serializable) param1);
+        //args.putParcelableArrayList(ARG_PARAM1, (ArrayList<? extends Parcelable>) param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -88,6 +93,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle b = this.getArguments();
+        bikeplaces = (List<Network>) b.getSerializable(ARG_PARAM1);
+        //networks.forEach(n->Log.e("name", n.getName()));
     }
 
     @Override
@@ -169,12 +177,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
 
-        //setUpMarkersOnMap();
+        setUpMarkersOnMap();
     }
 
-//    private void setUpMarkersOnMap() {
-//        for(int i =0; i<)
-//    }
+    private void setUpMarkersOnMap() {
+        for(int i =0; i< bikeplaces.size(); i++)
+        {
+            LatLng place = new LatLng(bikeplaces.get(i).getLocation().getLatitude(), bikeplaces.get(i).getLocation().getLongitude());
+            mMap.addMarker(new MarkerOptions().position(place).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).title(bikeplaces.get(i).getName()));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(place));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+        }
+    }
 
     private void locationUpdate() {
         if (mMap == null) {

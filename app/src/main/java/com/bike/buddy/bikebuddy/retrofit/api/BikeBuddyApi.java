@@ -9,5 +9,4 @@ public interface BikeBuddyApi {
 
     @GET("v2/networks")
     Call<NetworksResponse> getNetworks();
-
 }

@@ -1,9 +1,12 @@
 package com.bike.buddy.bikebuddy.retrofit.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.List;
 
-public class Network implements Serializable{
+public class Network implements Serializable {
 
     private List<String> company = null;
     private String href;
@@ -59,5 +62,6 @@ public class Network implements Serializable{
     public void setGbfsHref(String gbfsHref) {
         this.gbfsHref = gbfsHref;
     }
+
 
 }
