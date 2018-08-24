@@ -1,8 +1,9 @@
 package com.bike.buddy.bikebuddy.retrofit.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class NetworksResponse {
+public class NetworksResponse implements Serializable{
 
     private List<Network> networks = null;
 

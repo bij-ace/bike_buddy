@@ -1,6 +1,8 @@
 package com.bike.buddy.bikebuddy.retrofit.model;
 
-public class Location {
+import java.io.Serializable;
+
+public class Location implements Serializable{
 
     private String city;
     private String country;
