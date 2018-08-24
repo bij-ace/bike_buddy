@@ -8,10 +8,6 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-<<<<<<< HEAD
-=======
-
->>>>>>> 87f1becee81a28d35f5fcb7b65f09e53079c39c7
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
