@@ -472,21 +472,25 @@ public class ConvertLatLngToAddress extends Context {
         return null;
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public int checkPermission(@NonNull String s, int i, int i1) {
         return 0;
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public int checkCallingPermission(@NonNull String s) {
         return 0;
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public int checkCallingOrSelfPermission(@NonNull String s) {
         return 0;
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public int checkSelfPermission(@NonNull String s) {
         return 0;
@@ -522,21 +526,25 @@ public class ConvertLatLngToAddress extends Context {
 
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public int checkUriPermission(Uri uri, int i, int i1, int i2) {
         return 0;
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public int checkCallingUriPermission(Uri uri, int i) {
         return 0;
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public int checkCallingOrSelfUriPermission(Uri uri, int i) {
         return 0;
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public int checkUriPermission(@Nullable Uri uri, @Nullable String s, @Nullable String s1, int i, int i1, int i2) {
         return 0;

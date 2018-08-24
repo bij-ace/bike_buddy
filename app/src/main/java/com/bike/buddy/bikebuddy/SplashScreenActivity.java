@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.bike.buddy.bikebuddy.retrofit.api.BikeBuddyApi;
+import com.bike.buddy.bikebuddy.retrofit.model.IncidentsResponse;
 import com.bike.buddy.bikebuddy.retrofit.model.Network;
 import com.bike.buddy.bikebuddy.retrofit.model.NetworksResponse;
 import com.bike.buddy.bikebuddy.retrofit.service.BikeBuddyService;
@@ -47,6 +48,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+
+        testIncidents();
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         prefs = new BuddyPrefs(this);
@@ -137,7 +140,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     public void loadNetworks(String city) {
         if (NetworkUtils.isNetworkAvailable(getApplicationContext())) {
             Call call;
-            BikeBuddyApi api = BikeBuddyService.createService();
+            BikeBuddyApi api = BikeBuddyService.createService(AppConstants.APPLICATION_BASE_URL);
             call = api.getNetworks();
             call.enqueue(new Callback<NetworksResponse>() {
 
@@ -170,6 +173,28 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<NetworksResponse> call, Throwable t) {
+
+                }
+            });
+        }
+    }
+
+    public void testIncidents() {
+        if (NetworkUtils.isNetworkAvailable(getApplicationContext())) {
+            Call call;
+            BikeBuddyApi api = BikeBuddyService.createService(AppConstants.APPLICATION_BASE_URL_INCIDENTS);
+            call = api.getIncidents("hazard", "Denver");
+            call.enqueue(new Callback<IncidentsResponse>() {
+
+                @Override
+                public void onResponse(Call<IncidentsResponse> call, Response<IncidentsResponse> response) {
+                    IncidentsResponse incidentsResponse = response.body();
+
+                    Log.e("incidents response", new Gson().toJson(incidentsResponse));
+                }
+
+                @Override
+                public void onFailure(Call<IncidentsResponse> call, Throwable t) {
 
                 }
             });
