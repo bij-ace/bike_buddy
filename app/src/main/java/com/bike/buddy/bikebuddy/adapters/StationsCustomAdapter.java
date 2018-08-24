@@ -54,8 +54,8 @@ public class StationsCustomAdapter extends RecyclerView.Adapter<StationsCustomAd
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Station station = stationsList.get(position);
-        holder.name.setText(station.getName());
-        holder.availibilty.setText(station.getFree_bikes());
+        holder.name.setText("Address : " + station.getName());
+        holder.availibilty.setText("Number of Available Bikes : " + station.getFree_bikes());
         holder.address.setText(station.getAddress());
     }
 

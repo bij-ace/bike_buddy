@@ -22,6 +22,7 @@ public class StationResultScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_result_screen);
         setupViews();
+        stationsList = (List<Station>) getIntent().getSerializableExtra("station");
         LinearLayoutManager llm = new LinearLayoutManager(getApplication());
         stationRecyclerView.setLayoutManager(llm);
         if (stationsList != null) {

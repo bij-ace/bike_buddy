@@ -1,5 +1,6 @@
 package com.bike.buddy.bikebuddy;
 
+import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -237,6 +238,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 public boolean onMarkerClick(Marker marker) {
                                     String toast = "Free bikes : " + stat.get(finalI).getFree_bikes() + "\n" + "Empty Slots : " + stat.get(finalI).getEmpty_slots();
                                     Toast.makeText(getContext(), toast, Toast.LENGTH_LONG ).show();
+                                    Intent intent = new Intent(getContext(), StationResultScreenActivity.class);
+                                    intent.putExtra("station", (Serializable) stat);
+                                    startActivity(intent);
                                     return false;
                                 }
                             });
