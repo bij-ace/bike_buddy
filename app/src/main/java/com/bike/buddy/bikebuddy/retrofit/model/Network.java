@@ -64,4 +64,11 @@ public class Network implements Serializable {
     }
 
 
+    public String getCompanyName() {
+        String address = "";
+        for (int i = 0; i < company.size(); i++) {
+            address += company.get(i);
+        }
+        return address;
+    }
 }
