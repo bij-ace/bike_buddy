@@ -7,11 +7,11 @@ import java.util.List;
 
 public class Station implements Serializable {
     int empty_slots;
-    private List<Extra> extra = null;
+    private Extra extra = null;
     int free_bikes;
     String id;
-    long latitude;
-    long longitude;
+    float latitude;
+    float longitude;
 
     public int getEmpty_slots() {
         return empty_slots;
@@ -21,11 +21,11 @@ public class Station implements Serializable {
         this.empty_slots = empty_slots;
     }
 
-    public List<Extra> getExtra() {
+    public Extra getExtra() {
         return extra;
     }
 
-    public void setExtra(List<Extra> extra) {
+    public void setExtra(Extra extra) {
         this.extra = extra;
     }
 
@@ -45,20 +45,20 @@ public class Station implements Serializable {
         this.id = id;
     }
 
-    public long getLatitude() {
+    public float getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(long latitude) {
+    public void setLatitude(float latitude) {
         this.latitude = latitude;
     }
 
 
-    public long getLongitude() {
+    public float getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(long longitude) {
+    public void setLongitude(float longitude) {
         this.longitude = longitude;
     }
 

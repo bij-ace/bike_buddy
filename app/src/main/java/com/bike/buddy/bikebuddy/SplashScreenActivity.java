@@ -18,6 +18,8 @@ import android.util.Log;
 import com.bike.buddy.bikebuddy.retrofit.api.BikeBuddyApi;
 import com.bike.buddy.bikebuddy.retrofit.model.Network;
 import com.bike.buddy.bikebuddy.retrofit.model.NetworksResponse;
+import com.bike.buddy.bikebuddy.retrofit.model.StationNetworkResponse;
+import com.bike.buddy.bikebuddy.retrofit.model.StationResponse;
 import com.bike.buddy.bikebuddy.retrofit.service.BikeBuddyService;
 import com.bike.buddy.bikebuddy.util.NetworkUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -170,7 +172,6 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<NetworksResponse> call, Throwable t) {
-
                 }
             });
         }
