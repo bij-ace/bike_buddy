@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".HazardsScreenActivity" />
-        <activity android:name=".ListResultScreenActivity"></activity>
+        <activity android:name=".StationResultScreenActivity"></activity>
     </application>
 
 </manifest>
