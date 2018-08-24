@@ -8,10 +8,8 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-<<<<<<<HEAD
-        =======
+
 import android.os.Bundle;
->>>>>>>8dea623001dfd68a5a282a13294ebe922296426c
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -150,13 +148,15 @@ public class SplashScreenActivity extends AppCompatActivity {
                         NetworksResponse allNetworks = response.body();
 
                         Log.e("networks response", new Gson().toJson(allNetworks));
+                        BikeBuddy.getInstance().networks = allNetworks;
 
                         List<Network> filteredNetworks = allNetworks.getNetworks().stream().
                                 filter(network -> network.getLocation().getCity().contains("Denver"))
                                 // filter(network->network.getLocation().getCity().contains(city)) // there is no data for this location 'Southfield' so it is hardcoded for now
                                 .collect(Collectors.toList());
 
-                        Log.e("filtered networks response", new Gson().toJson(filteredNetworks).toString());
+                        Log.e("filtered networks response", new Gson().toJson(filteredNetworks));
+                        BikeBuddy.getInstance().filteredNetworks = filteredNetworks;
 
                         Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
                         i.putExtra("network", (Serializable) filteredNetworks);
