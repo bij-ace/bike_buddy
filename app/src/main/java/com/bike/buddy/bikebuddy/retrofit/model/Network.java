@@ -1,8 +1,9 @@
 package com.bike.buddy.bikebuddy.retrofit.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Network {
+public class Network implements Serializable{
 
     private List<String> company = null;
     private String href;

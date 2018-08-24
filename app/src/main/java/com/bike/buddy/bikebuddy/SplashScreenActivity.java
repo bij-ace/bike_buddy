@@ -1,5 +1,6 @@
 package com.bike.buddy.bikebuddy;
 
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -7,24 +8,38 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+<<<<<<<HEAD
+        =======
+import android.os.Bundle;
+>>>>>>>8dea623001dfd68a5a282a13294ebe922296426c
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 
+import com.bike.buddy.bikebuddy.retrofit.api.BikeBuddyApi;
+import com.bike.buddy.bikebuddy.retrofit.model.Network;
+import com.bike.buddy.bikebuddy.retrofit.model.NetworksResponse;
+import com.bike.buddy.bikebuddy.retrofit.service.BikeBuddyService;
+import com.bike.buddy.bikebuddy.util.NetworkUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SplashScreenActivity extends AppCompatActivity {
-
     private static final String TAG = SplashScreenActivity.class.getSimpleName();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -35,17 +50,14 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         prefs = new BuddyPrefs(this);
         int SPLASH_TIME_OUT = 3000;
         new Handler().postDelayed(new Runnable() {
-
             @Override
             public void run() {
                 cityName();
-                Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
-                startActivity(i);
-                finish();
             }
         }, SPLASH_TIME_OUT);
     }
@@ -121,5 +133,47 @@ public class SplashScreenActivity extends AppCompatActivity {
         }// If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
         String city = addresses.get(0).getLocality();
         Log.e("CITY", city);
+
+        loadNetworks(city);
+    }
+
+    public void loadNetworks(String city) {
+        if (NetworkUtils.isNetworkAvailable(getApplicationContext())) {
+            Call call;
+            BikeBuddyApi api = BikeBuddyService.createService();
+            call = api.getNetworks();
+            call.enqueue(new Callback<NetworksResponse>() {
+
+                @Override
+                public void onResponse(Call<NetworksResponse> call, Response<NetworksResponse> response) {
+                    try {
+                        NetworksResponse allNetworks = response.body();
+
+                        Log.e("networks response", new Gson().toJson(allNetworks));
+
+                        List<Network> filteredNetworks = allNetworks.getNetworks().stream().
+                                filter(network -> network.getLocation().getCity().contains("Denver"))
+                                // filter(network->network.getLocation().getCity().contains(city)) // there is no data for this location 'Southfield' so it is hardcoded for now
+                                .collect(Collectors.toList());
+
+                        Log.e("filtered networks response", new Gson().toJson(filteredNetworks).toString());
+
+                        Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
+                        i.putExtra("network", (Serializable) filteredNetworks);
+                        startActivity(i);
+                        // close this activity
+                        finish();
+
+                    } catch (Exception e) {
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<NetworksResponse> call, Throwable t) {
+
+                }
+            });
+        }
     }
 }
